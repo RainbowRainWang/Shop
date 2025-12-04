@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.UI", "Shop.UI\Shop.UI.csproj", "{9F50D534-22C7-44DB-8BAC-0D13B8388714}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.Application", "Shop.Application\Shop.Application.csproj", "{3D53040E-DAE0-43A8-9EEF-FBD9B5A400D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shop.Domain", "Shop.Domain\Shop.Domain.csproj", "{B109378D-A94B-45BC-A0BB-84DC94505686}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F50D534-22C7-44DB-8BAC-0D13B8388714}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F50D534-22C7-44DB-8BAC-0D13B8388714}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F50D534-22C7-44DB-8BAC-0D13B8388714}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F50D534-22C7-44DB-8BAC-0D13B8388714}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D53040E-DAE0-43A8-9EEF-FBD9B5A400D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D53040E-DAE0-43A8-9EEF-FBD9B5A400D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D53040E-DAE0-43A8-9EEF-FBD9B5A400D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D53040E-DAE0-43A8-9EEF-FBD9B5A400D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B109378D-A94B-45BC-A0BB-84DC94505686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B109378D-A94B-45BC-A0BB-84DC94505686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B109378D-A94B-45BC-A0BB-84DC94505686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B109378D-A94B-45BC-A0BB-84DC94505686}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
