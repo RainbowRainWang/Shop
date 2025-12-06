@@ -14,7 +14,7 @@ namespace Shop.Application.Services
             _context = context;
         }
 
-        public int CreateProduct(CreateProductDto createProductDto)
+        public async Task CreateProduct(CreateProductDto createProductDto)
         {
             Product product = new Product
             {
@@ -24,8 +24,7 @@ namespace Shop.Application.Services
             };  
 
             _context.Products.Add(product);
-            _context.SaveChanges();
-            return product.Id;
+            await _context.SaveChangesAsync();
         }
     }
 }
