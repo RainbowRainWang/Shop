@@ -4,6 +4,7 @@ namespace Shop.Application.Services
 {
     public interface IProductService
     {
-        public Task CreateProduct(CreateProductDto createProductDto);
+        Task CreateProduct(CreateProductDto productDto);
+        Task<IEnumerable<GetProductDto>> GetProducts();
     }
 }

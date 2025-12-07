@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shop.Application.Dtos;
 using Shop.Application.Services;
-using System.Threading.Tasks;
 
 namespace Shop.UI.Areas.Admin.Controllers
 {
@@ -14,9 +13,10 @@ namespace Shop.UI.Areas.Admin.Controllers
             _productService = productService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var products = await _productService.GetProducts();
+            return View(products);
         }
 
         [HttpGet]
@@ -26,14 +26,14 @@ namespace Shop.UI.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CreateProductDto createProductDto)
+        public async Task<IActionResult> CreateAsync(CreateProductDto productDto)
         {
             if (!ModelState.IsValid)
             {
-                return View(createProductDto);
+                return View(productDto);
             }
 
-            await _productService.CreateProduct(createProductDto);
+            await _productService.CreateProduct(productDto);
             return RedirectToAction("Index");
         }
     }

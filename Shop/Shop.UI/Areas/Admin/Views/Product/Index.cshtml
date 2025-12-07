@@ -1,3 +1,24 @@
-﻿@{
+﻿@model IEnumerable<GetProductDto>
+@{
     ViewData["Title"] = "商品列表";
 }
+<table>
+    <thead>
+        <tr>
+            <th>商品ID</th>
+            <th>商品名称</th>
+            <th>价格</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Name</td>
+                <td>@product.Value</td>
+            </tr>
+        }
+    </tbody>
+</table>
