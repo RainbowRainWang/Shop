@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Shop.UI.Areas.Admin.Controllers
+namespace Shop.UI.Controllers.Admin
 {
-    public class DashboardController : Controller
+    [Route("admin")]
+    public class AdminController : Controller
     {
+        [Route("")]
         public IActionResult Index()
         {
             return View();
