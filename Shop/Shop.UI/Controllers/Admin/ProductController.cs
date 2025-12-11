@@ -2,13 +2,11 @@
 using Shop.Application.Dtos.Product;
 using Shop.Application.Services;
 using Shop.UI.Constants;
-using Shop.UI.Controllers.Admin;
-using Shop.UI.Models;
 
 namespace Shop.UI.Areas.Admin.Controllers
 {
     [Route("admin/products")]
-    public class ProductController : BaseController
+    public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
 
@@ -17,54 +15,62 @@ namespace Shop.UI.Areas.Admin.Controllers
             _productService = productService;
         }
 
+        // GET: admin/products
         [HttpGet]
-        public async Task<ActionResult<ResponseModel>> GetProductsAsync()
+        public async Task<ResponseModel<IEnumerable<GetProductDto>>> GetProductsAsync()
         {
-            return Success(data: await _productService.GetProductsAsync());
+            var products = await _productService.GetProductsAsync();
+            return ResponseModel<IEnumerable<GetProductDto>>.Success(products);
         }
 
+        // GET: admin/products/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<ResponseModel>> GetProductAsync(int id)
+        public async Task<ResponseModel<GetProductDto>> GetProductAsync(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);
 
             if (product == null)
-                return Fail(Messages.DataNotFound);
+            {
+                return ResponseModel<GetProductDto>.Error(Messages.DataNotFound, StatusCodes.Status404NotFound);
+            }
 
-            return Success(data: product);
+            return ResponseModel<GetProductDto>.Success(product);
         }
 
+        // POST: admin/products
         [HttpPost]
-        public async Task<ActionResult<ResponseModel>> CreateProductAsync(CreateProductDto productDto)
+        public async Task<ResponseModel> PostProductAsync(CreateProductDto productDto)
         {
-            var result = await _productService.CreateProductAsync(productDto);
+            await _productService.CreateProductAsync(productDto);
+            return ResponseModel.Success();
+        }
+
+        // PUT: admin/products
+        [HttpPut]
+        public async Task<ResponseModel> PutProductAsync(UpdateProductDto productDto)
+        {
+            var result = await _productService.UpdateProductAsync(productDto);
 
             if (result <= 0)
-                return Fail();
+            {
+                return ResponseModel.Error(Messages.DataNotFound, StatusCodes.Status404NotFound);
+            }
 
-            return Success();
+            return ResponseModel.Success();
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ResponseModel>> UpdateProduct(UpdateProductDto productDto)
-        {
-           var result = await _productService.UpdateProductAsync(productDto);
-
-            if (result <= 0)
-                return Fail(Messages.DataNotFound);
-
-            return Success();
-        }
-
+        // DELETE: admin/products/{id}
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseModel>> DeleteProduct(int id)
+        public async Task<ResponseModel> DeleteProductAsync(int id)
         {
             var result = await _productService.DeleteProductAsync(id);
 
             if (result <= 0)
-                return Fail(Messages.DataNotFound);
+            { 
+                return ResponseModel.Error(Messages.DataNotFound, StatusCodes.Status404NotFound); 
+            }
 
-            return Success();
+            return ResponseModel.Success();
         }
     }
 }

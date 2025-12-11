@@ -1,6 +1,63 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿<div id="app">
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+        添加商品
+    </button>
+
+    <!-- Table -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">商品名</th>
+                <th scope="col">价格</th>
+                <th scope="col">简介</th>
+                <th scope="col">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Product rows will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addProductModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">商品名</label>
+                        <input type="text" class="form-control" id="productName" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">价格</label>
+                        <input type="number" class="form-control" id="productPrice" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="productDescription" class="form-label">简介</label>
+                        <textarea class="form-control" id="productDescription" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/admin/main.js"></script>
 }
-Dashboard
