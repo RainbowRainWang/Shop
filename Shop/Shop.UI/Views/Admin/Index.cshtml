@@ -1,8 +1,11 @@
 ﻿<div id="app">
 
+    <!-- Search -->
+    <button class="btn btn-success" v-on:click="getProducts">搜索</button>
+
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
-        添加商品
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal" v-on:click="setTitle('添加商品')">
+        添加
     </button>
 
     <!-- Table -->
@@ -12,45 +15,57 @@
                 <th scope="col">#</th>
                 <th scope="col">商品名</th>
                 <th scope="col">价格</th>
-                <th scope="col">简介</th>
                 <th scope="col">操作</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Product rows will be dynamically inserted here -->
+            <tr v-for="(p, i) in products">
+                <td>{{i+1}}</td>
+                <td>{{p.name}}</td>
+                <td>￥ {{p.value}}</td>
+                <td>
+                    <button class="btn btn-warning" v-on:click="openUpdateModal(p.id)">修改</button> |
+                    <button class="btn btn-danger">删除</button>
+                </td>
+            </tr>
         </tbody>
     </table>
 
     <!-- Modal -->
-    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addProductModalLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="productModalLabel">{{title}}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <!-- Modal Body -->
                 <div class="modal-body">
+                    <div class="mb-3" v-show="this.productVM.id > 0 ? true : false">
+                        <label for="productId" class="form-label">商品ID</label>
+                        <input type="text" class="form-control" id="productId" v-model="productVM.id" disabled />
+                    </div>
+                    
                     <div class="mb-3">
                         <label for="productName" class="form-label">商品名</label>
-                        <input type="text" class="form-control" id="productName" />
+                        <input type="text" class="form-control" id="productName" v-model="productVM.name" />
                     </div>
                     <div class="mb-3">
                         <label for="productPrice" class="form-label">价格</label>
-                        <input type="number" class="form-control" id="productPrice" />
+                        <input type="number" class="form-control" id="productPrice" v-model="productVM.value" />
                     </div>
                     <div class="mb-3">
                         <label for="productDescription" class="form-label">简介</label>
-                        <textarea class="form-control" id="productDescription" rows="3"></textarea>
+                        <textarea class="form-control" id="productDescription" rows="3" v-model="productVM.description"></textarea>
                     </div>
                 </div>
 
                 <!-- Modal Footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="closeModal">关闭</button>
+                    <button type="button" class="btn btn-primary" v-on:click="saveProduct">保存</button>
                 </div>
             </div>
         </div>

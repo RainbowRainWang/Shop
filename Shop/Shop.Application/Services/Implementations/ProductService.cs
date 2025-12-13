@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shop.Application.Dtos.Product;
+using Shop.Application.Services.Interfaces;
 using Shop.Database;
 using Shop.Domain.Entities;
 
@@ -14,15 +15,16 @@ namespace Shop.Application.Services.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<GetProductDto>> GetProductsAsync()
+        public async Task<IEnumerable<GetProductsDto>> GetProductsAsync()
         {
             return await _context.Products
-                .Select(p => new GetProductDto
+                .AsNoTracking()
+                .Select(p => new GetProductsDto
                 {
-                    Id = p.Id,
+                    Id= p.Id,
                     Name = p.Name,
                     Description = p.Description,
-                    Value = p.Value
+                    Value = p.Value.ToString("N2")
                 })
                 .ToListAsync();
         }
@@ -30,10 +32,10 @@ namespace Shop.Application.Services.Implementations
         public async Task<GetProductDto?> GetProductByIdAsync(int id)
         {
             return await _context.Products
+                .AsNoTracking()
                 .Where(p => p.Id == id)
                 .Select(p => new GetProductDto
                 {
-                    Id = p.Id,
                     Name = p.Name,
                     Description = p.Description,
                     Value = p.Value
@@ -41,15 +43,25 @@ namespace Shop.Application.Services.Implementations
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<int> CreateProductAsync(CreateProductDto productDto)
+        public async Task<GetProductsDto> CreateProductAsync(CreateProductDto productDto)
         {
-            _context.Products.Add(new Product
+            Product product = new Product
             {
                 Name = productDto.Name,
                 Description = productDto.Description,
                 Value = productDto.Value
-            });
-            return await _context.SaveChangesAsync();
+            };
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return new GetProductsDto
+            {
+                Id= product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Value = product.Value.ToString("N2")
+            };
         }
 
         public async Task<int> UpdateProductAsync(UpdateProductDto productDto)
@@ -62,7 +74,7 @@ namespace Shop.Application.Services.Implementations
                 product.Name = productDto.Name;
                 product.Description = productDto.Description;
                 product.Value = productDto.Value;
-                _context.Products.Update(product);
+
                 result = await _context.SaveChangesAsync();
             }
 

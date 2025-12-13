@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Shop.Application.Services;
 using Shop.Application.Services.Implementations;
+using Shop.Application.Services.Interfaces;
 using Shop.Database;
+using System.Text.Encodings.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
