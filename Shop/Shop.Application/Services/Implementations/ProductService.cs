@@ -74,7 +74,7 @@ namespace Shop.Application.Services.Implementations
                 product.Name = productDto.Name;
                 product.Description = productDto.Description;
                 product.Value = productDto.Value;
-
+                _context.Products.Update(product);
                 result = await _context.SaveChangesAsync();
             }
 
