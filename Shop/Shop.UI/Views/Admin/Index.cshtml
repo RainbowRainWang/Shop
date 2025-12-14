@@ -3,12 +3,26 @@
 }
 
 <div id="app">
-    <product-component></product-component>
+    <div class="row">
+        <div class="col-2">
+            <ul class="list-group">
+                <li class="list-group-item" v-on:click="menu = 0" v-bind:class="{ active: menu === 0 }">产品管理</li>
+                <li class="list-group-item" v-on:click="menu = 1" v-bind:class="{ active: menu === 1 }">订单管理</li>
+                <li class="list-group-item" v-on:click="menu = 2" v-bind:class="{ active: menu === 2 }">库存管理</li>
+            </ul>
+        </div>
+        <div class="col-10">
+            <product-component v-if="menu === 0"></product-component>
+            <p v-else-if="menu === 1">Orders</p>
+            <stock-component v-else-if="menu === 2"></stock-component>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     <!-- 组件定义先于 main.js -->
     <script src="~/js/admin/product-component.js" asp-append-version="true"></script>
+    <script src="~/js/admin/stock-component.js" asp-append-version="true"></script>
     <!-- 注册并挂载 app -->
     <script src="~/js/admin/main.js" asp-append-version="true"></script>
 }

@@ -6,7 +6,6 @@ namespace Shop.UI.Controllers.Admin
     public class AdminController : Controller
     {
         [Route("")]
-        [Route("home")]
         public IActionResult Index()
         {
             return View();

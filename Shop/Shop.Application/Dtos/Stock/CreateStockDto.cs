@@ -1,12 +1,9 @@
-﻿namespace Shop.Domain.Entities
+﻿namespace Shop.Application.Dtos.Stock
 {
-    public class Stock
+    public class CreateStockDto
     {
-        public int Id{ get; set; }
         public string Description { get; set; } = string.Empty;
         public int Qty { get; set; }
-
         public int ProductId { get; set; }
-        public Product? Product { get; set; }
     }
 }

@@ -67,7 +67,7 @@ namespace Shop.Application.Services.Implementations
         public async Task<int> UpdateProductAsync(UpdateProductDto productDto)
         {
             int result = -1;
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productDto.Id);
+            var product = await _context.Products.FindAsync(productDto.Id);
 
             if (product != null)
             {
@@ -84,7 +84,7 @@ namespace Shop.Application.Services.Implementations
         public async Task<int> DeleteProductAsync(int id)
         {
             int result = -1;
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _context.Products.FindAsync(id);
 
             if (product != null)
             {

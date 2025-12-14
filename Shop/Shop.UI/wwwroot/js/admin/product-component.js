@@ -1,27 +1,24 @@
-﻿// 精简、现代化的 product-component（Vue 3 Options API + async/await）
-// 特点：统一错误处理、Bootstrap 5 原生 Modal API 优先、表单校验、立即刷新列表
+﻿// product-component - 与 /admin/products API 对应
+// 依赖：axios，Bootstrap（可回退 jQuery），全局 showBasicToast/showErrorToast
 
 const productComponent = {
     template: `
     <div class="product-admin">
         <div class="d-flex mb-3 gap-2">
             <button class="btn btn-success" @click="getProducts" :disabled="loading">
-                <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                搜索
+                <span v-if="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                刷新
             </button>
-
-            <button type="button" class="btn btn-primary" @click="openCreateModal">
-                添加
-            </button>
+            <button class="btn btn-primary" @click="openCreateModal">添加</button>
         </div>
 
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th style="width:56px">#</th>
                     <th>商品名</th>
-                    <th>价格</th>
-                    <th>操作</th>
+                    <th style="width:140px">价格</th>
+                    <th style="width:160px">操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,7 +28,7 @@ const productComponent = {
                 <tr v-for="(p, i) in products" :key="p.id">
                     <td>{{ i + 1 }}</td>
                     <td>{{ p.name }}</td>
-                    <td>￥ {{ p.value }}</td>
+                    <td>￥ {{ formatMoney(p.value) }}</td>
                     <td>
                         <button class="btn btn-sm btn-warning me-1" @click="openUpdateModal(p.id)">修改</button>
                         <button class="btn btn-sm btn-danger" @click="confirmDelete(p.id)">删除</button>
@@ -41,40 +38,35 @@ const productComponent = {
         </table>
 
         <!-- Modal -->
-        <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true" ref="productModalEl">
+        <div class="modal fade" id="productModal" tabindex="-1" ref="productModalEl" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{ isEdit ? '修改商品' : '添加商品' }}</h5>
                         <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
                     </div>
-
                     <div class="modal-body">
-                        <div class="mb-3" v-if="isEdit">
+                        <div v-if="isEdit" class="mb-3">
                             <label class="form-label">商品ID</label>
                             <input class="form-control" v-model="productVM.id" disabled />
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">商品名</label>
                             <input type="text" class="form-control" v-model.trim="productVM.name" />
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">价格</label>
                             <input type="number" class="form-control" v-model.number="productVM.value" min="0" step="0.01" />
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">简介</label>
                             <textarea class="form-control" rows="3" v-model="productVM.description"></textarea>
                         </div>
                     </div>
-
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @click="closeModal">关闭</button>
-                        <button type="button" class="btn btn-primary" :disabled="submitting" @click="saveProduct">
-                            <span v-if="submitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <button class="btn btn-secondary" @click="closeModal">关闭</button>
+                        <button class="btn btn-primary" :disabled="submitting" @click="saveProduct">
+                            <span v-if="submitting" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
                             保存
                         </button>
                     </div>
@@ -85,8 +77,8 @@ const productComponent = {
     `,
     data() {
         return {
-            productVM: this.emptyProduct(),
             products: [],
+            productVM: this.emptyProduct(),
             loading: false,
             submitting: false
         };
@@ -99,6 +91,18 @@ const productComponent = {
     methods: {
         emptyProduct() {
             return { id: 0, name: '', description: '', value: 0 };
+        },
+
+        // 安全格式化价格（后端可能返回 string 或 number）
+        formatMoney(v) {
+            try {
+                const cleaned = (typeof v === 'string') ? v.replace(/,/g, '').trim() : v;
+                const n = Number(cleaned);
+                if (!Number.isFinite(n)) return '0.00';
+                return n.toFixed(2);
+            } catch {
+                return '0.00';
+            }
         },
 
         async getProducts() {
@@ -118,16 +122,17 @@ const productComponent = {
             try {
                 const res = await axios.get(`/admin/products/${id}`);
                 const d = res?.data?.data;
-                if (d) {
-                    this.productVM = {
-                        id: d.id ?? id,
-                        name: d.name ?? '',
-                        description: d.description ?? '',
-                        value: d.value ?? 0
-                    };
-                } else {
-                    showErrorToast('未找到商品数据');
+                if (!d) {
+                    showErrorToast(res?.data?.message || '未找到商品');
+                    return;
                 }
+                // 兼容 value 为 string 或 number
+                this.productVM = {
+                    id: d.id ?? id,
+                    name: d.name ?? '',
+                    description: d.description ?? '',
+                    value: (typeof d.value === 'string') ? Number(d.value.replace(/,/g, '')) : (d.value ?? 0)
+                };
             } catch (err) {
                 this.handleError(err);
             } finally {
@@ -151,7 +156,13 @@ const productComponent = {
             if (!this.validateProduct()) return;
             this.submitting = true;
             try {
-                const res = await axios.post('/admin/products', this.productVM);
+                // CreateProductDto shape: { name, description, value }
+                const payload = {
+                    name: this.productVM.name.trim(),
+                    description: this.productVM.description?.trim() ?? '',
+                    value: this.productVM.value
+                };
+                const res = await axios.post('/admin/products', payload);
                 showBasicToast(res?.data?.message || '创建成功');
                 this.closeBootstrapModal();
                 await this.getProducts();
@@ -166,7 +177,14 @@ const productComponent = {
             if (!this.validateProduct()) return;
             this.submitting = true;
             try {
-                const res = await axios.put('/admin/products', this.productVM);
+                // UpdateProductDto shape expected by backend
+                const payload = {
+                    id: this.productVM.id,
+                    name: this.productVM.name.trim(),
+                    description: this.productVM.description?.trim() ?? '',
+                    value: this.productVM.value
+                };
+                const res = await axios.put('/admin/products', payload);
                 showBasicToast(res?.data?.message || '更新成功');
                 this.closeBootstrapModal();
                 await this.getProducts();
@@ -178,6 +196,7 @@ const productComponent = {
         },
 
         async deleteProduct(id) {
+            if (!confirm('确定要删除此商品吗？')) return;
             this.loading = true;
             try {
                 const res = await axios.delete(`/admin/products/${id}`);
@@ -200,18 +219,9 @@ const productComponent = {
             this.showBootstrapModal();
         },
 
-        confirmDelete(id) {
-            if (confirm('确定要删除此商品吗？')) {
-                this.deleteProduct(id);
-            }
-        },
-
         saveProduct() {
-            if (this.isEdit) {
-                this.updateProduct();
-            } else {
-                this.createProduct();
-            }
+            if (this.isEdit) return this.updateProduct();
+            return this.createProduct();
         },
 
         closeModal() {
@@ -225,7 +235,7 @@ const productComponent = {
             console.error(err);
         },
 
-        // Bootstrap 5 原生 Modal API 优先，回退 jQuery
+        // Bootstrap 5 Modal 原生 API 优先，回退 jQuery
         showBootstrapModal() {
             const el = this.$refs.productModalEl;
             if (!el) return;

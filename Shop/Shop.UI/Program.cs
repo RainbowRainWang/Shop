@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Shop.Application.Services.Implementations;
 using Shop.Application.Services.Interfaces;
 using Shop.Database;
-using System.Text.Encodings.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +13,7 @@ builder.Services.AddDbContext<ShopDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IStockService, StockService>();
 
 var app = builder.Build();
 
