@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shop.Application.Dtos.Stock;
+using Shop.Application.Dtos.Stock.Admin;
 using Shop.Application.Services.Interfaces;
 using Shop.UI.Constants;
 using Shop.UI.Filters;

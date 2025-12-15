@@ -1,8 +1,7 @@
-﻿namespace Shop.Application.Dtos.Product
+﻿namespace Shop.Application.Dtos.Product.Admin
 {
-    public class UpdateProductDto
+    public class GetProductDto
     {
-        public int Id { get; set; } 
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public decimal Value { get; set; }

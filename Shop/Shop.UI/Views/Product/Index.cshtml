@@ -1,0 +1,21 @@
+﻿@model GetProductStocksDto
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div>
+    <p>@Model.Name</p>
+    <p>@Model.Description</p>
+    <p>￥@Model.Value</p>
+    <div>
+        <label for="stockSelect">选择库存:</label>
+        <select>
+            @foreach (var stock in Model.Stocks)
+            {
+                <option value="@stock.Id">
+                    @stock.Description
+                </option>
+            }
+        </select>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shop.Application.Dtos.Stock;
+using Shop.Application.Dtos.Stock.Admin;
 using Shop.Application.Services.Interfaces;
 using Shop.Database;
 using Shop.Domain.Entities;

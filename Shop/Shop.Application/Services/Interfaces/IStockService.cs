@@ -1,4 +1,4 @@
-﻿using Shop.Application.Dtos.Stock;
+﻿using Shop.Application.Dtos.Stock.Admin;
 
 namespace Shop.Application.Services.Interfaces
 {

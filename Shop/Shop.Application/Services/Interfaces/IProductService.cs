@@ -1,4 +1,5 @@
 ﻿using Shop.Application.Dtos.Product;
+using Shop.Application.Dtos.Product.Admin;
 
 namespace Shop.Application.Services.Interfaces
 {
@@ -6,6 +7,7 @@ namespace Shop.Application.Services.Interfaces
     {
         Task<IEnumerable<GetProductsDto>> GetProductsAsync();
         Task<GetProductDto?> GetProductByIdAsync(int id);
+        Task<GetProductStocksDto?> GetProductStocksByNameAsync(string name);
         Task<GetProductsDto> CreateProductAsync(CreateProductDto productDto);
         Task<int> UpdateProductAsync(UpdateProductDto productDto);
         Task<int> DeleteProductAsync(int id);

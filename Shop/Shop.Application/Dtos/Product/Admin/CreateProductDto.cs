@@ -1,6 +1,6 @@
-﻿namespace Shop.Application.Dtos.Product
+﻿namespace Shop.Application.Dtos.Product.Admin
 {
-    public class GetProductDto
+    public class CreateProductDto
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

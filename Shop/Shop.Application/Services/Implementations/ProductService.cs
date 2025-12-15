@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shop.Application.Dtos.Product;
+using Shop.Application.Dtos.Product.Admin;
+using Shop.Application.Dtos.Stock;
 using Shop.Application.Services.Interfaces;
 using Shop.Database;
 using Shop.Domain.Entities;
@@ -39,6 +41,27 @@ namespace Shop.Application.Services.Implementations
                     Name = p.Name,
                     Description = p.Description,
                     Value = p.Value
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<GetProductStocksDto?> GetProductStocksByNameAsync(string name)
+        {
+            return await _context.Products
+                .AsNoTracking()
+                .Include(p => p.Stocks)
+                .Where(p => p.Name == name)
+                .Select(p => new GetProductStocksDto
+                {
+                    Name = p.Name,
+                    Description = p.Description,
+                    Value = p.Value.ToString("N2"),
+                    Stocks = p.Stocks.Select(s => new GetStockDto
+                    {
+                        Id = s.Id,
+                        Description = s.Description,
+                        InStock = s.Qty > 0
+                    })
                 })
                 .FirstOrDefaultAsync();
         }
@@ -93,6 +116,6 @@ namespace Shop.Application.Services.Implementations
             }
 
             return result;
-        }
+        }       
     }
 }

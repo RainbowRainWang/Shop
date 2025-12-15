@@ -1,4 +1,4 @@
-﻿namespace Shop.Application.Dtos.Stock
+﻿namespace Shop.Application.Dtos.Stock.Admin
 {
     public class UpdateStockDto
     {
